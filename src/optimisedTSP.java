@@ -12,12 +12,12 @@ import java.util.Random;
 //	ENDIF
 //	ELSE
 //		choose a random driver
-//		choose a radom univisted place
-//		IF this driver can't go to the currently tested location 
+//		choose a random unvisited place
+//		IF the random chosen driver can't go to the randomly chosen unvisited place because it already has been tested as an already-tested-for-validity-node
 //			another driver will try to go to a random location
-//			the tested nodes become the visited nodes
+//			the already-tested-for-validity-nodes become the visited nodes
 //		ENDIF
-//		IF the current location is valid and untested 
+//		IF the current location is valid and not an already-tested-for-validity-node 
 //			the driver travels there
 //		ENDIF
 //	ENDELSE
