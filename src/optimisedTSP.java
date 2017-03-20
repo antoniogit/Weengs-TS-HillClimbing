@@ -17,7 +17,7 @@ import java.util.Random;
 //			another driver will try to go to a random location
 //			the already-tested-for-validity-nodes become the visited nodes
 //		ENDIF
-//		IF the current location is valid and not an already-tested-for-validity-node 
+//		IF the random unvisited place is valid and not an already-tested-for-validity-node 
 //			the driver travels there
 //		ENDIF
 //	ENDELSE
