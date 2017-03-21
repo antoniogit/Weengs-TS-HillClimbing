@@ -19,6 +19,7 @@ public class TSP {
 		int nDrivers = 2;//eg 2 drivers
 		int nShops = 3;//eg 3 shops
 		int nNodes = nDrivers + nShops + 1 ;//nShops + nDrivers(each driver has a different starting point) + 1(the warehouse)
+		int numberOfIterations = 300000;
 		
 		int warehouseNode = 5;
 			
@@ -52,9 +53,11 @@ public class TSP {
 		 shopPickupTimeIntervals.add((double) 8);
 		 shopPickupTimeIntervals.add((double) 16);
 		
-		optNodes= optimisedTSP.HC(timeCosts, driverHomes, warehouseNode, shopPickupTimeIntervals, nNodes, nDrivers);
-		optimisedTSP.PrintFinalNodes(optNodes);
+		//optNodes= optimisedTSP.HC(timeCosts, driverHomes, warehouseNode, shopPickupTimeIntervals, nNodes, nDrivers);
+		//optimisedTSP.PrintFinalNodes(optNodes);
 		//optimisedTSP.globalFitness(100,timeCosts, driverHomes, warehouseNode, shopPickupTimeIntervals, nNodes, nDrivers);
+		
+		optimisedTSP.globalFitness(numberOfIterations,timeCosts, driverHomes, warehouseNode, shopPickupTimeIntervals, nNodes, nDrivers);
 	
 	}
 	

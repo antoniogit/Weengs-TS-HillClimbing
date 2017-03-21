@@ -3,33 +3,52 @@ import java.util.ArrayList;
 import java.util.Random;
 
 //Pseudo Code:
-//intialize the nodes as being not visited
-//initialize the driver's homes and set them as visited
-//initialize the already-tested-for-validity-nodes as being the same as the visited nodes for start 
-//WHILE there are univisited places left
-//	IF there are still unvisited places but all of them are tested, 
-//		flag the fact that this is not a solution and END the algorithm
-//	ENDIF
-//	ELSE
-//		choose a random driver
-//		choose a random unvisited place
-//		IF the random chosen driver can't go to the randomly chosen unvisited place because it already has been tested as an already-tested-for-validity-node
-//			another driver will try to go to a random location
-//			the already-tested-for-validity-nodes become the visited nodes
-//		ENDIF
-//		IF the random unvisited place is valid and not an already-tested-for-validity-node 
-//			the driver travels there
-//		ENDIF
-//	ENDELSE
-//ENDWHILE
-//take drivers to warehouse
+
+//main(number of iterations, a matrix with the time costs to get from point a to b, an array specifying which nodes are the driver homes, the warehouse node, an array with the shops pickup time superior limit)
+  //initialize current iteration to 0
+  //intitalize the best Fitness so far
+  //WHILE number oF iterations is larger than current iteration
+	//run HC()
+	//IF the last HC() 's fitness is smaller than the best Fitness so far
+	  //best fitness so far gets the value of HC()
+	//ENDIF
+  //ENDWHILE
+  //print the best solution so far
+
+//HC()
+  //intialize the nodes as being not visited
+  //initialize the driver's homes and set them as visited
+  //initialize the already-tested-for-validity-places as being the same as the visited places for start 
+
+  //WHILE there are unvisited places
+  //    travel()
+  // ENDWHILE
+  //take drivers to warehouse
+  //return solution
+
+//travel()
+  //  IF there are unvisited places and all of them are tested
+  //      END with a no solution result
+  //  ELSE
+  //      choose a random driver as current driver
+  //      choose a random unvisited place as current place
+  //      IF current place is in already-tested-for-validity-place
+  //          travel()
+  //          set the already-tested-for-validity-places equal to visited places
+  //      ENDIF
+
+  //      IF current place is valid and not in already-tested-for-validity-place 
+  //          add node to driver's route
+  //          add current location to visited places
+  //      ENDIF
+  //  ENDIF
 
 public class optimisedTSP {
 	
 	static double [][] timeCosts;
 	static int warehouseNode;
 	static int nNodes;
-	static ArrayList<Integer> testedNodes;
+	static ArrayList<Integer> testedNodes = new ArrayList<Integer>();
 	static int nDrivers;
 	static boolean isSolution = true;
 	
@@ -42,12 +61,17 @@ public class optimisedTSP {
 	
 	public static ArrayList<ArrayList<Integer>> HC (double [][] timeC, ArrayList<Integer> drvHomes, int wHouse, ArrayList<Double> pickupIntervals, int nodes, int drivers) {
 		
+		
+		visited.clear();
+		
+		
 		timeCosts = timeC;
 		driverHomes = drvHomes;
 		warehouseNode = wHouse;
 		shopPickupTimeIntervals = pickupIntervals;
 		nNodes = nodes-1; // nodes without warehouse
 		nDrivers = drivers;
+		
 		
 		setVisited();
 		setDriversHomePoints();
@@ -75,7 +99,7 @@ public class optimisedTSP {
 		boolean untestedLoc = areAnyMoreUntestedLoc();
 		
 		if(untestedLoc == false) { //this is saying while there are still unvisited places but all of them are tested, this is not a solution
-			System.out.println("This is not a solution");
+			//System.out.println("This is not a solution");
 			isSolution = false;
 			return;
 		} else  {
@@ -154,6 +178,8 @@ public class optimisedTSP {
 		int loc = -1;
 		boolean thereAreUnivisted = false;
 		ArrayList<Integer> remaining = new ArrayList<Integer>();
+		remaining.clear();
+		//remaining = (ArrayList<Integer>) null;
 		
 		for (int i=0; i<visited.size(); i++) {
 			
@@ -215,6 +241,7 @@ public class optimisedTSP {
 			}
 			System.out.println();
 		}
+		nodes.clear();
 	}
 	
 	public static double fitness() {
@@ -229,21 +256,33 @@ public class optimisedTSP {
 		return maxTime;
 	}
 	
-//	public static void globalFitness(int numberOfIterations, double [][] timeC, ArrayList<Integer> drvHomes, int wHouse, ArrayList<Double> pickupIntervals, int nodes, int drivers) {
-//		
-//		ArrayList<ArrayList<Integer>> currentSolution;
-//		ArrayList<ArrayList<Integer>> mostEfficientSolution = null;
-//		double currentFitness;
-//		double lowestFitness = Double.POSITIVE_INFINITY;
-//		for(int i=0; i< numberOfIterations; i++) {
-//			currentSolution = HC(timeC, drvHomes, wHouse, pickupIntervals, nodes, drivers);
-//			currentFitness = fitness();
-//			if(currentFitness < lowestFitness) {
-//				lowestFitness = currentFitness;
-//				mostEfficientSolution = currentSolution;
-//			}
-//		}
-//		System.out.println("The most efficient solution is:");
-//		PrintFinalNodes(mostEfficientSolution);
-//	}
+	public static void globalFitness(int numberOfIterations, double [][] timeC, ArrayList<Integer> drvHomes, int wHouse, ArrayList<Double> pickupIntervals, int nodes, int drivers) {
+		
+		ArrayList<ArrayList<Integer>> currentSolution = new ArrayList<ArrayList<Integer>>();
+		ArrayList<ArrayList<Integer>> mostEfficientSolution = new ArrayList<ArrayList<Integer>>();
+		
+		double currentFitness;
+		double lowestFitness = Double.POSITIVE_INFINITY;
+		
+		for(int i=0; i< numberOfIterations; i++) {
+			
+			currentSolution = HC(timeC, drvHomes, wHouse, pickupIntervals, nodes, drivers);			
+			currentFitness = fitness();
+			if(isSolution == true && currentFitness < lowestFitness) {
+				lowestFitness = currentFitness;
+				mostEfficientSolution.clear();
+				mostEfficientSolution= (ArrayList<ArrayList<Integer>>) currentSolution.clone();
+				//PrintFinalNodes(mostEfficientSolution);
+			}
+			
+			currentSolution.clear();
+		}
+		System.out.println("The most efficient solution is:");
+		if(mostEfficientSolution.size() > 0) {
+			PrintFinalNodes(mostEfficientSolution);
+		}
+		else {
+			System.out.println("No solution was found for the given data set");
+		}
+	}
 }
